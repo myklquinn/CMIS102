@@ -64,9 +64,9 @@ def calc_price(n, t):
     price_child = price_adult + DISCOUNT_YOUTH
     price_senior = price_adult + DISCOUNT_SENIOR
     print("\n---", name, "@", time, "---")
-    print("Adults:", price_adult)
-    print("Child (12 and under):", price_child)
-    print("Senior (65 and older):", price_senior)
+    print("Adults: $" + str(price_adult))
+    print("Child (12 and under): $" + str(price_child))
+    print("Senior (65 and older): $" + str(price_senior))
     adult_tickets = is_number("How many adult tickets? ")
     child_tickets = is_number("How many child tickets? ")
     senior_tickets = is_number("How many senior tickets? ")
@@ -120,5 +120,6 @@ def user_interact():
 
 
 # print welcome message and start user interaction chain
+clear()
 print("Welcome to the Rio River Cinema 5")
 user_interact()
