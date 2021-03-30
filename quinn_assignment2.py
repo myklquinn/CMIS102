@@ -22,6 +22,7 @@ CONFIRM_RESP = ["Y", "y", "Yes", "yes"]
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
+
 # define function to error check if value entered is a number
 def is_number(message):
     while True:
@@ -45,6 +46,8 @@ def movie_list():
 
 def showtime_list(n):
     i = 1
+    print("\n---Please select a showtime.---")
+    print(MOVIES_SHOWING[n]["name"])
     print("0 - Go Back")
     for x in MOVIES_SHOWING[n]["showtimes"]:
         print(i, "-", x)
@@ -75,8 +78,7 @@ def calc_price(n, t):
     senior_total = senior_tickets * price_senior
     total_price = adult_total + child_total + senior_total
     print("\nYour total price is $" + str(total_price))
-    print("Do you want to complete your purchase?")
-    complete_purchase = input("Yes or No? ")
+    complete_purchase = input("Do you want to complete your purchase? (y/n) ")
     if complete_purchase in CONFIRM_RESP:
         clear()
         print("\n---Receipt---")
@@ -105,11 +107,11 @@ def calc_price(n, t):
 
 
 def user_interact():
+    print("Welcome to the Rio River Cinema 5")
     print("\n---Please select a movie to see the showtimes.---")
     movie_list()
     movie_picked = is_number("Which movie do you want to see? ")
     clear()
-    print("\n---Please select a showtime.---")
     showtime_list(movie_picked - 1)
     showtime_picked = is_number("Showtime: ")
     clear()
@@ -121,5 +123,4 @@ def user_interact():
 
 # print welcome message and start user interaction chain
 clear()
-print("Welcome to the Rio River Cinema 5")
 user_interact()
