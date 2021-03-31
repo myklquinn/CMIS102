@@ -15,7 +15,8 @@ MOVIES_SHOWING = [
     {"name": "Saving Sally [R]", "showtimes": [1200, 1500, 1930], "3D": False},
     {"name": "Windows and Mirrors [PG]", "showtimes": [1030, 1420, 1810, 2200], "3D": False},
 ]
-CONFIRM_RESP = ["Y", "y", "Yes", "yes"]
+RESP_CONFIRM = ["Y", "y", "Yes", "yes"]
+RESP_CANCEL = ["N", "n", "No", "no"]
 
 
 # define function to clear text from console window 
@@ -104,37 +105,62 @@ def complete_purchase(n, t):
     print("\nYour total price is $" + str(total_price))
 
     # confirm purchase and print receipt or redirect customer if they do not want to complete their purchase
-    complete_purchase = input("Do you want to complete your purchase? (y/n) ")
-    if complete_purchase in CONFIRM_RESP:
-        clear()
-        print("\n---Receipt---")
-        print("Movie: ", name)
-        if adult_tickets > 0:
-            print("Adult Tickets: " + str(adult_tickets) + " @ " + str(price_adult) + "/ea - $" + str(adult_total))
-        if child_tickets > 0:
-            print("Child Tickets: " + str(child_tickets) + " @ " + str(price_child) + "/ea - $" + str(child_total))
-        if senior_tickets > 0:
-            print("Senior Tickets: " + str(senior_tickets) + " @ " + str(price_senior) + "/ea - $" + str(senior_total))
-        print("Total price: $" + str(total_price))
-        print("Thank you for your purchase. Enjoy your movie.")
+    while True:
+        customer_complete = input("Do you want to complete your purchase? (y/n) ")
+        if customer_complete in RESP_CONFIRM:
+            clear()
+            print("\n---Receipt---")
+            print("Movie: ", name)
+            if adult_tickets > 0:
+                print("Adult Tickets: " + str(adult_tickets) + " @ " + str(price_adult) + "/ea - $" + str(adult_total))
+            if child_tickets > 0:
+                print("Child Tickets: " + str(child_tickets) + " @ " + str(price_child) + "/ea - $" + str(child_total))
+            if senior_tickets > 0:
+                print("Senior Tickets: " + str(senior_tickets) + " @ " + str(price_senior) + "/ea - $" + str(
+                    senior_total))
+            print("Total price: $" + str(total_price))
+            print("Thank you for your purchase. Enjoy your movie.")
 
-        # present customer with the option to purchase more tickets
-        new_purchase = input("----------\nWould you like to make another purchase? ")
-        if new_purchase in CONFIRM_RESP:
+            new_purchase()
+            break
+        elif customer_complete in RESP_CANCEL:
+            while True:
+                print("\nWhat would you like to do?")
+                print("1 - Start over.")
+                print("2 - Reenter ticket selection.")
+                user_choice = is_number("Next: ")
+                if user_choice == 1:
+                    clear()
+                    user_interact()
+                    break
+                elif user_choice == 2:
+                    clear()
+                    complete_purchase(n, t)
+                    break
+                else:
+                    print("You have made and invalid selection. Please try again.")
+                    pass
+            break
+        else:
+            print("You have made and invalid selection. Please try again.")
+            pass
+
+
+# define function to present customer with the option to purchase more tickets
+def new_purchase():
+    while True:
+        new_purchase = input("----------\nWould you like to make another purchase? (y/n) ")
+        if new_purchase in RESP_CONFIRM:
             clear()
             user_interact()
-        else:
+            break
+        elif new_purchase in RESP_CANCEL:
             clear()
             print("\n\nThank you, goodbye.")
-    else:
-        print("\nWhat would you like to do?")
-        print("1 - Start over.")
-        print("2 - Reenter ticket selection.")
-        user_choice = is_number("Next: ")
-        if user_choice == 1:
-            user_interact()
+            break
         else:
-            complete_purchase(n, t)
+            print("You have made and invalid selection. Please try again.")
+            pass
 
 
 # set order of user interactions and collect inputs
