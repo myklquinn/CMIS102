@@ -18,7 +18,7 @@ MOVIES_SHOWING = [
 CONFIRM_RESP = ["Y", "y", "Yes", "yes"]
 
 
-# define console clearing function
+# define function to clear text from console window 
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -34,27 +34,49 @@ def is_number(message):
         except:
             print("Please enter a numerical value ")
             pass
+        
 
 
-# define function to display movie names and showtimes
+# define function to display movie names and determine if input is valid
 def movie_list():
     i = 1
     for x in MOVIES_SHOWING:
         print(i, "-", x["name"])
         i += 1
+    while True:
+        movie_picked = is_number("Which movie do you want to see? ")
+        if movie_picked <= len(MOVIES_SHOWING) and movie_picked > 0:
+            return movie_picked
+            break
+        else:
+            print("You have made and invalid selection. Please try again.")
+            pass
 
 
+# define function to display movie showtimes and determine if input is valid
 def showtime_list(n):
     i = 1
     print("\n---Please select a showtime.---")
     print(MOVIES_SHOWING[n]["name"])
     print("0 - Go Back")
-    for x in MOVIES_SHOWING[n]["showtimes"]:
+    showtimes = MOVIES_SHOWING[n]["showtimes"]
+    for x in showtimes:
         print(i, "-", x)
         i += 1
+    while True:
+        showtime_picked = is_number("Showtime: ")
+        if showtime_picked <= len(showtimes):
+            return showtime_picked
+            break
+        else:
+            print("You have made and invalid selection. Please try again.")
+            pass
 
 
-def calc_price(n, t):
+# define function to collect number of tickets desired, calculate total, and confirm purchase
+def complete_purchase(n, t):
+
+    # get parameters and set ticket pricesfor selected movie and showtime
     movie = MOVIES_SHOWING[n]
     name = movie["name"]
     time = movie["showtimes"][t]
@@ -66,6 +88,8 @@ def calc_price(n, t):
         price_adult += SURCHARGE_3D
     price_child = price_adult + DISCOUNT_YOUTH
     price_senior = price_adult + DISCOUNT_SENIOR
+
+    # collect inputs for number of desired tickets
     print("\n---", name, "@", time, "---")
     print("Adults: $" + str(price_adult))
     print("Child (12 and under): $" + str(price_child))
@@ -73,21 +97,30 @@ def calc_price(n, t):
     adult_tickets = is_number("How many adult tickets? ")
     child_tickets = is_number("How many child tickets? ")
     senior_tickets = is_number("How many senior tickets? ")
+
+    # calculate total for customer purchase
     adult_total = adult_tickets * price_adult
     child_total = child_tickets * price_child
     senior_total = senior_tickets * price_senior
     total_price = adult_total + child_total + senior_total
     print("\nYour total price is $" + str(total_price))
+
+    # confirm purchase and print receipt or redirect customer if they do not want to complete their purchase
     complete_purchase = input("Do you want to complete your purchase? (y/n) ")
     if complete_purchase in CONFIRM_RESP:
         clear()
         print("\n---Receipt---")
         print("Movie: ", name)
-        print("Adult Tickets: " + str(adult_tickets) + " @ " + str(price_adult) + "/ea - $" + str(adult_total))
-        print("Child Tickets: " + str(child_tickets) + " @ " + str(price_child) + "/ea - $" + str(child_total))
-        print("Senior Tickets: " + str(senior_tickets) + " @ " + str(price_senior) + "/ea - $" + str(senior_total))
+        if adult_tickets > 0:
+            print("Adult Tickets: " + str(adult_tickets) + " @ " + str(price_adult) + "/ea - $" + str(adult_total))
+        if child_tickets > 0:
+            print("Child Tickets: " + str(child_tickets) + " @ " + str(price_child) + "/ea - $" + str(child_total))
+        if senior_tickets > 0:
+            print("Senior Tickets: " + str(senior_tickets) + " @ " + str(price_senior) + "/ea - $" + str(senior_total))
         print("Total price: $" + str(total_price))
         print("Thank you for your purchase. Enjoy your movie.")
+
+        # present customer with the option to purchase more tickets
         new_purchase = input("----------\nWould you like to make another purchase? ")
         if new_purchase in CONFIRM_RESP:
             clear()
@@ -103,20 +136,19 @@ def calc_price(n, t):
         if user_choice == 1:
             user_interact()
         else:
-            calc_price(n, t)
+            complete_purchase(n, t)
 
 
+# set order of user interactions and collect inputs
 def user_interact():
     print("Welcome to the Rio River Cinema 5")
     print("\n---Please select a movie to see the showtimes.---")
-    movie_list()
-    movie_picked = is_number("Which movie do you want to see? ")
+    movie_picked = movie_list()
     clear()
-    showtime_list(movie_picked - 1)
-    showtime_picked = is_number("Showtime: ")
+    showtime_picked = showtime_list(movie_picked - 1)
     clear()
     if showtime_picked != 0:
-        calc_price(movie_picked - 1, showtime_picked - 1)
+        complete_purchase(movie_picked - 1, showtime_picked - 1)
     else:
         user_interact()
 
