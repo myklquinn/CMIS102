@@ -34,7 +34,6 @@ def is_number(message):
         except:
             print("Please enter a numerical value ")
             pass
-        
 
 
 # define function to display movie names and determine if input is valid
@@ -75,7 +74,6 @@ def showtime_list(n):
 
 # define function to collect number of tickets desired, calculate total, and confirm purchase
 def complete_purchase(n, t):
-
     # get parameters and set ticket pricesfor selected movie and showtime
     movie = MOVIES_SHOWING[n]
     name = movie["name"]
